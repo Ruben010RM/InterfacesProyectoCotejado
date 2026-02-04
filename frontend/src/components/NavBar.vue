@@ -50,12 +50,6 @@
           </li>
         </ul>
       </div>
-      <p
-        class="d-flex justify-content-center align-items-center text-white m-0 me-2"
-      >
-        {{ userName }}
-      </p>
-
       <form class="d-flex ms-auto me-2" role="search" @submit.prevent="buscar">
         <input
           class="form-control form-control-sm me-2 rounded"
@@ -81,7 +75,11 @@
           >{{ cesta.totalItems }}</span
         >
       </router-link>
-
+      <p
+        class="d-flex justify-content-center align-items-center text-white m-0 me-2"
+      >
+        {{ userName }}
+      </p>
       <!-- Dropdown de acceso/registro -->
       <div class="dropdown">
         <button

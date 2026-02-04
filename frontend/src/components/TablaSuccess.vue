@@ -136,7 +136,7 @@ async function generarFacturaPdf() {
   doc.text(totalText, positionX - 9, doc.lastAutoTable.finalY + 10);
 
   //Guardamos el pdf
-  doc.save("factura.pdf");
+  doc.save(`factura_${Date.now()}.pdf`);
 
   //Limpuamos ambas listas y el sessionStorage
   cestaStore.clearCesta();
