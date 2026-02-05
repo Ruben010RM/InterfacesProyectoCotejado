@@ -24,7 +24,9 @@
               class="form-control w-auto me-2"
               :class="{ 'is-invalid': !dniValido }"
               :disabled="editando"
-              oninvalid="this.setCustomValidity('Por favor, rellene este campo')"
+              oninvalid="
+                this.setCustomValidity('Por favor, rellene este campo')
+              "
               oninput="this.setCustomValidity('')"
               required
             />
@@ -484,12 +486,14 @@ const cargarClientes = async () => {
     numclientes.value = data.length; //Actualiza el numero total de clientes
     currentPage.value = 1; // Reiniciar a la primera págiona al cargar
   });
-  Swal.fire({
-    icon: "success",
-    title: "Listando Clientes...",
-    showConfirmButton: false,
-    timer: 1500,
-  });
+  if (admin) {
+    Swal.fire({
+      icon: "success",
+      title: "Listando Clientes...",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
 };
 
 /////// GUARDAR CLIENTE COMPLETO
@@ -506,7 +510,7 @@ const guardarCliente = async () => {
   // Requerir aceptación de términos antes de guardar o modificar
   if (nuevoCliente.value.fecha_alta.includes("/")) {
     nuevoCliente.value.fecha_alta = formatearFechaParaInput(
-      nuevoCliente.value.fecha_alta
+      nuevoCliente.value.fecha_alta,
     );
   }
 
@@ -516,7 +520,7 @@ const guardarCliente = async () => {
       (cliente) =>
         cliente.dni === nuevoCliente.value.dni ||
         cliente.movil === nuevoCliente.value.movil ||
-        cliente.email === nuevoCliente.value.email
+        cliente.email === nuevoCliente.value.email,
     );
     if (duplicado) {
       Swal.fire({
@@ -551,11 +555,11 @@ const guardarCliente = async () => {
       // Modificar cliente (PUT)
       const clienteActualizado = await updateCliente(
         clienteEditandoId.value,
-        nuevoCliente.value
+        nuevoCliente.value,
       );
       // Actualiza el cliente en la lista local
       const index = clientes.value.findIndex(
-        (c) => c.id === clienteEditandoId.value
+        (c) => c.id === clienteEditandoId.value,
       );
       if (index !== -1) clientes.value[index] = clienteActualizado;
       Swal.fire({
@@ -638,7 +642,7 @@ const eliminarCliente = async (movil) => {
   clientes.value = await getClientes(mostrarHistorico.value);
   // Buscar cliente completo (que incluye el ID)
   const clienteAEliminar = clientes.value.find(
-    (cliente) => cliente.movil === movil
+    (cliente) => cliente.movil === movil,
   );
 
   if (!clienteAEliminar) {
@@ -825,7 +829,7 @@ const capitalizarTexto = (propiedad) => {
     .split(" ")
     .map(
       (palabra) =>
-        palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase()
+        palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase(),
     )
     .join(" ");
 };
@@ -842,7 +846,7 @@ const formatearFechaParaInput = (fecha) => {
   // partes = [dd, mm, yyyy]
   return `${partes[0]}-${partes[1].padStart(2, "0")}-${partes[2].padStart(
     2,
-    "0"
+    "0",
   )}`;
 };
 
@@ -956,7 +960,7 @@ const filtrarMunicipios = () => {
 
   // 3️⃣ filtrar los municipios cuyo id empiece por esos dos dígitos
   municipiosFiltrados.value = municipios.value.filter((m) =>
-    m.id.startsWith(codigoProv)
+    m.id.startsWith(codigoProv),
   );
 
   // 4️⃣ opcional: resetear el municipio si ya no corresponde

@@ -63,8 +63,9 @@
         </tfoot>
       </table>
       <span v-if="!logueado" class="mb-0 d-flex justify-content-end">
-        Por favor, para proceder al pago: 
-        <router-link to="/login">Inicie Sesión</router-link>
+        Por favor, para proceder al pago:
+        <router-link to="/login">Inicie Sesión</router-link> o
+        <router-link to="/clientes">Regístrate</router-link>
       </span>
     </div>
   </div>

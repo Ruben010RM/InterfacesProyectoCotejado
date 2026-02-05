@@ -423,6 +423,23 @@
       "lopd": true,
       "tipo": "admin",
       "password": "$2b$10$NzlpsG2Wd4M8kO7.P7Kayu.tasGvnmvlta4OiiYNsdRMUlOIDbebm"
+    },
+    {
+      "id": "404a",
+      "dni": "76507255D",
+      "nombre": "Test",
+      "apellidos": "Test ",
+      "email": "test@test.test",
+      "movil": "666777888",
+      "direccion": "C/ Test",
+      "provincia": "Albacete",
+      "municipio": "Abengibre",
+      "fecha_alta": "2026-02-22",
+      "tipoCliente": "particular",
+      "historico": true,
+      "lopd": true,
+      "tipo": "user",
+      "password": "$2b$10$rMfK8noOmJBBeDaQOqWYoum5XfXaX/X8UXV0osa7P0729kZTgYxCm"
     }
   ],
   "noticias": [
