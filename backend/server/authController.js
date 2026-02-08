@@ -59,7 +59,7 @@ export function verificarToken(req, res, next) {
   console.log("Authorization header:", authHeader);
   //Si no existe mensaje de error
   if (!authHeader) {
-    console.log("❌ ERROR: Token no recibido - 401");
+    console.log("ERROR: Token no recibido - 401");
     return res.status(401).json({ mensaje: "Token no recibido" });
   }
 
@@ -68,7 +68,7 @@ export function verificarToken(req, res, next) {
   //Si existe se verifica que sea valido y vemos los datos que contiene
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("✅ Token válido. Usuario:", decoded);
+    console.log("Token válido. Usuario:", decoded);
     //Se crea un atributo user para el request de la peticion que seguira hacia delante(soloAdmin), con los datos del usuario
     req.user = decoded;
     //Se ejecuta la siguiente funcion que toque
