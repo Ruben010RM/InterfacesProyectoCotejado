@@ -84,6 +84,7 @@ router.post(
   },
 );
 
+//Busca elementos que coincidan con lo pasado en la query
 router.get("/buscar", async (req, res) => {
   const { q } = req.query;
   if (!q) return res.json([]);
@@ -100,6 +101,7 @@ router.get("/buscar", async (req, res) => {
   }
 });
 
+//Getter  por id
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -112,6 +114,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Pasando un id en la URL, actualiza el articulo con el estado actualizado
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { estado } = req.body;

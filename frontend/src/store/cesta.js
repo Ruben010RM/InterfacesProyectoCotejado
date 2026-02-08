@@ -28,7 +28,7 @@ export const useCestaStore = defineStore("cesta", () => {
     return total;
   });
 
-  //Copua la lista a la lista para la factura y vacia la original(para visual)
+  //Copia la lista a la lista para la factura y vacia la original(para visual)
   function completarCompra() {
     if (items.value.length > 0) {
       compraCompleta.value = [...items.value];
@@ -89,11 +89,12 @@ export const useCestaStore = defineStore("cesta", () => {
     }
   }
 
+  //Precio que se vera post descuentos/envio
   const precioFinal = ref(0);
   const codigoDescuento = ref({ valido: false, codigo: "" });
   const envioGratis = ref({ precioEnvio: 50, envioGratis: true });
 
-  //Cada vez que cambie el precioTotal o el codigoDescuento se valiida el precioFinal
+  //Cada vez que cambie el precioTotal o el codigoDescuento se actualiza el precioFinal
   watch(
     [codigoDescuento, totalPrecio],
     () => {

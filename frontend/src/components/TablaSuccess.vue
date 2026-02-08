@@ -74,6 +74,7 @@ async function guardarFacturaMongo() {
 
 onMounted(async () => {
   await guardarFacturaMongo();
+  //Por cada articulo de la cesta actualiza su estado a vendido
   for (const articulo of cestaStore.compraCompleta) {
     const articuloId = articulo._id || articulo.id;
     await updateArticuloStatus(articuloId, "vendido");
