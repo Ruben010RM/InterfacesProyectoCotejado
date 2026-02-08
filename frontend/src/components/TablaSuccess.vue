@@ -43,6 +43,7 @@ import { useCestaStore } from "../store/cesta";
 import logo from "../assets/logo.png";
 import { addFactura } from "../api/facturas";
 import { onMounted, ref } from "vue";
+import { updateArticuloStatus } from "../api/articulos";
 // Creamos la cesta para usar metodos y datos
 const cestaStore = useCestaStore();
 //Como ya no queremos los datos visibles(vaciar iconos y cesta), pasamos los datos a la variable invisible
