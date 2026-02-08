@@ -95,6 +95,7 @@ import axios from "axios";
 import { ref } from "vue";
 import { useCestaStore } from "../store/cesta";
 import Swal from "sweetalert2";
+import { updateArticuloStatus } from "../api/articulos";
 
 //Si existe el token es que estamos logueados, lo almacenamos como boolean solo
 const logueado = sessionStorage.getItem("token") ? true : false;
@@ -155,6 +156,9 @@ async function iniciarPago() {
       mostrarAlerta("Error", "No se pudo iniciar el pago", "error");
       return;
     }
+
+ 
+
     //Si existe redirigimos a la url que nos haya mandado Stripe
     window.location.href = session.url;
   } catch (error) {

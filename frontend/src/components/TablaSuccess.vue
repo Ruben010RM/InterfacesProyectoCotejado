@@ -74,6 +74,10 @@ async function guardarFacturaMongo() {
 
 onMounted(async () => {
   await guardarFacturaMongo();
+  for (const articulo of cestaStore.compraCompleta) {
+    const articuloId = articulo._id || articulo.id;
+    await updateArticuloStatus(articuloId, "vendido");
+  }
 });
 
 //Metodo que genera un pdf en base a los datos que le pasamos.

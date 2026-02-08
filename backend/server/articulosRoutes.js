@@ -99,6 +99,37 @@ router.get("/buscar", async (req, res) => {
     res.status(500).json({ error: "Error en la búsqueda" });
   }
 });
+
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const articulo = await Articulo.findById(id);
+    if (!articulo)
+      return res.status(404).json({ error: "Articulo no encontrado" });
+    res.json(articulo);
+  } catch (err) {
+    res.status(500).json({ error: "Error en la búsqueda" });
+  }
+});
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+  try {
+    const articulo = await Articulo.findByIdAndUpdate(
+      id,
+      { estado },
+      { new: true },
+    );
+    if (!articulo)
+      return res
+        .status(404)
+        .json({ error: "Articulo no encontrado ni actualizado" });
+    res.json(articulo);
+  } catch (err) {
+    res.status(500).json({ error: "Error en la actualización" });
+  }
+});
 // otras rutas PUT, DELETE, GET /:id igual
 
 export default router;

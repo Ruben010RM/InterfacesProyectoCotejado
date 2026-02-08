@@ -25,6 +25,11 @@ export async function addArticulo(formData) {
   return res.data;
 }
 
+export async function updateArticuloStatus(id, estado) {
+  const res = await axios.put(`${API_URL}/${id}`, estado);
+  return res.data;
+}
+
 // Actualizar artículo
 export async function updateArticulo(id, articulo) {
   const res = await axios.put(`${API_URL}/${id}`, articulo);
