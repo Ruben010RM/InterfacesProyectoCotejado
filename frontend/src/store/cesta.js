@@ -21,11 +21,11 @@ export const useCestaStore = defineStore("cesta", () => {
     const currentList =
       items.value.length > 0 ? items.value : compraCompleta.value;
     if (!Array.isArray(currentList)) return 0;
-
-    return currentList.reduce(
+    const total = currentList.reduce(
       (total, item) => total + item.precio * (item.cantidad || 0),
       0,
     );
+    return total;
   });
 
   //Copua la lista a la lista para la factura y vacia la original(para visual)
@@ -89,6 +89,30 @@ export const useCestaStore = defineStore("cesta", () => {
     }
   }
 
+  const precioFinal = ref(0);
+  const codigoDescuento = ref({ valido: false, codigo: "" });
+  const envioGratis = ref({ precioEnvio: 50, envioGratis: true });
+
+  //Cada vez que cambie el precioTotal o el codigoDescuento se valiida el precioFinal
+  watch(
+    [codigoDescuento, totalPrecio],
+    () => {
+      const precio = totalPrecio.value;
+      if (codigoDescuento.value.codigo === "DESCUENTO") {
+        codigoDescuento.value.valido = true;
+        precio *= 0.9;
+      } else {
+        codigoDescuento.value.valido = false;
+      }
+      envioGratis.value.envioGratis = precio >= 50;
+      if (!envioGratis.value.envioGratis) {
+        precio += envioGratis.value.precioEnvio;
+      }
+      precioFinal.value = precio;
+    },
+    { immediate: true },
+  );
+
   // Cada vez que un item nuevo entre en items, se cambiara el sessionSotrage para que entre este mismo, newItems es una referencia al array real
   watch(
     items,
@@ -103,11 +127,15 @@ export const useCestaStore = defineStore("cesta", () => {
     compraCompleta,
     totalItems,
     totalPrecio,
+    precioFinal,
+    envioGratis,
+    codigoDescuento,
     addProducto,
     removeProducto,
     incrementarCantidad,
     decrementarCantidad,
     clearCesta,
     completarCompra,
+    calcularPrecioFinal,
   };
 });

@@ -48,8 +48,28 @@
         </tbody>
         <tfoot>
           <tr class="fw-bold">
+            <td>
+              <label for="codigoDescuento"
+                >Introduce un codigo de descuento:</label
+              >
+              <input
+                type="text"
+                v-model="codigoDescuento"
+                v-on:change="validarDescuento"
+                :class="{ 'is-invalid': !cesta.codigoDescuento.valido }"
+                ;
+              />
+            </td>
+            <td>Precio de envio:</td>
+            <td>
+              {{
+                cesta.envioGratis.envioGratis
+                  ? `${cesta.envioGratis.precioEnvio}€`
+                  : "GRATIS"
+              }}
+            </td>
             <td colspan="3" class="text-end">Total</td>
-            <td>{{ cesta.totalPrecio.toFixed(2) }}€</td>
+            <td>{{ cesta.precioFinal.toFixed(2) }}€</td>
             <td>
               <button
                 class="btn btn-success btn-sm justify-content-end px-3"
@@ -72,7 +92,7 @@
 </template>
 <script setup>
 import axios from "axios";
-
+import { ref } from "vue";
 import { useCestaStore } from "../store/cesta";
 import Swal from "sweetalert2";
 
@@ -81,6 +101,8 @@ const logueado = sessionStorage.getItem("token") ? true : false;
 
 //creamos la cesta porque vamos a usar sus datos y metodos aqui tambien
 const cesta = useCestaStore();
+
+const codigoDescuento = ref("");
 
 //Funciones locales que usan las pasadas por la cesta
 function incrementarCantidad(id) {
@@ -91,6 +113,10 @@ function decrementarCantidad(id) {
 }
 function removeProducto(id) {
   cesta.removeProducto(id);
+}
+
+function validarDescuento() {
+  cesta.codigoDescuento = codigoDescuento.value;
 }
 
 //Alerta reutilizable pasandole los datos por parametro
