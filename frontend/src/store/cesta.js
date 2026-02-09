@@ -94,7 +94,7 @@ export const useCestaStore = defineStore("cesta", () => {
   const codigoDescuento = ref({ valido: false, codigo: "" });
   const envioGratis = ref({ precioEnvio: 50, envioGratis: true });
 
-  //Cada vez que cambie el precioTotal o el codigoDescuento se actualiza el precioFinal
+  //Cada vez que cambie el precioTotal o el codigoDescuento se actualiza el precioFinal (actualmente solo se comprueba en lo visual)
   watch(
     [codigoDescuento, totalPrecio],
     () => {
