@@ -17,7 +17,7 @@
           >
         </li>
         <li class="list-inline-item">
-          <a href="#" class="text-light text-decoration-none">Contacto</a>
+          <a href="/contacto" class="text-light text-decoration-none">Contacto</a>
         </li>
       </ul>
     </div>
