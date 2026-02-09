@@ -98,7 +98,7 @@ export const useCestaStore = defineStore("cesta", () => {
   watch(
     [codigoDescuento, totalPrecio],
     () => {
-      const precio = totalPrecio.value;
+      let precio = totalPrecio.value;
       if (codigoDescuento.value.codigo === "DESCUENTO") {
         codigoDescuento.value.valido = true;
         precio *= 0.9;
@@ -137,6 +137,5 @@ export const useCestaStore = defineStore("cesta", () => {
     decrementarCantidad,
     clearCesta,
     completarCompra,
-    calcularPrecioFinal,
   };
 });
