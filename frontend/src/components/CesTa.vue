@@ -54,8 +54,7 @@
               >
               <input
                 type="text"
-                v-model="codigoDescuento"
-                v-on:change="validarDescuento"
+                v-model="cesta.codigoDescuento.codigo"
                 :class="{ 'is-invalid': !cesta.codigoDescuento.valido }"
                 ;
               />
@@ -64,8 +63,8 @@
             <td>
               {{
                 cesta.envioGratis.envioGratis
-                  ? `${cesta.envioGratis.precioEnvio}€`
-                  : "GRATIS"
+                  ? "GRATIS"
+                  : `${cesta.envioGratis.precioEnvio}€`
               }}
             </td>
             <td colspan="3" class="text-end">Total</td>
@@ -117,7 +116,7 @@ function removeProducto(id) {
 }
 
 function validarDescuento() {
-  cesta.codigoDescuento = codigoDescuento.value;
+  cesta.codigoDescuento.codigo = codigoDescuento.value;
 }
 
 //Alerta reutilizable pasandole los datos por parametro
@@ -144,7 +143,9 @@ async function iniciarPago() {
       "http://localhost:5000/crear-checkout-session",
       {
         items: cesta.items,
-        amount: cesta.totalPrecio,
+        precioFinal: cesta.precioFinal,
+        totalPrecio: cesta.totalPrecio,
+        envioGratis: cesta.envioGratis.envioGratis,
       },
     );
     //Almacenamos la session dada por la respuesta del server, será una url.

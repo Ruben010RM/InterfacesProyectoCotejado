@@ -99,19 +99,20 @@ export const useCestaStore = defineStore("cesta", () => {
     [codigoDescuento, totalPrecio],
     () => {
       let precio = totalPrecio.value;
+      envioGratis.value.envioGratis = precio >= 50;
+      if (!envioGratis.value.envioGratis) {
+        precio += envioGratis.value.precioEnvio;
+      }
       if (codigoDescuento.value.codigo === "DESCUENTO") {
         codigoDescuento.value.valido = true;
         precio *= 0.9;
       } else {
         codigoDescuento.value.valido = false;
       }
-      envioGratis.value.envioGratis = precio >= 50;
-      if (!envioGratis.value.envioGratis) {
-        precio += envioGratis.value.precioEnvio;
-      }
+
       precioFinal.value = precio;
     },
-    { immediate: true },
+    { immediate: true, deep: true },
   );
 
   // Cada vez que un item nuevo entre en items, se cambiara el sessionSotrage para que entre este mismo, newItems es una referencia al array real
