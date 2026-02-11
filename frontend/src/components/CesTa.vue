@@ -94,7 +94,6 @@ import axios from "axios";
 import { ref } from "vue";
 import { useCestaStore } from "../store/cesta";
 import Swal from "sweetalert2";
-//TODO verificar que funcione todo lo de codigosDescuento y envo
 
 //Si existe el token es que estamos logueados, lo almacenamos como boolean solo
 const logueado = sessionStorage.getItem("token") ? true : false;
@@ -115,9 +114,7 @@ function removeProducto(id) {
   cesta.removeProducto(id);
 }
 
-function validarDescuento() {
-  cesta.codigoDescuento.codigo = codigoDescuento.value;
-}
+
 
 //Alerta reutilizable pasandole los datos por parametro
 function mostrarAlerta(title, text, icon) {
