@@ -101,8 +101,6 @@ const logueado = sessionStorage.getItem("token") ? true : false;
 //creamos la cesta porque vamos a usar sus datos y metodos aqui tambien
 const cesta = useCestaStore();
 
-const codigoDescuento = ref("");
-
 //Funciones locales que usan las pasadas por la cesta
 function incrementarCantidad(id) {
   cesta.incrementarCantidad(id);
