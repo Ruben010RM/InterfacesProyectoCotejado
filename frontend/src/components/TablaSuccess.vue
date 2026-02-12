@@ -131,6 +131,7 @@ async function generarFacturaPdf() {
   });
 
   // Coger los datos para poner en el documento, el total vendrá del compraCompleta ya que el otro estará vacío
+  //TODO indicar en las facturas de la BBDD y de PDF si hay descuento en el precioFinal
   const totalPrice = cestaStore.totalPrecio;
   const totalText = `Total: ${totalPrice.toFixed(2)}€`;
   const pageWidth = doc.internal.pageSize.width;

@@ -24,9 +24,9 @@ export async function addArticulo(formData) {
   });
   return res.data;
 }
-
+//Pa poder cogerlo como req.body.estado hay q mandarlo como objeto json, si no req.body, ya que no tiene un parametro asociado
 export async function updateArticuloStatus(id, estado) {
-  const res = await axios.put(`${API_URL}/${id}`, estado);
+  const res = await axios.put(`${API_URL}/${id}`, { estado });
   return res.data;
 }
 

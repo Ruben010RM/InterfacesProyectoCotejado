@@ -115,10 +115,6 @@ function removeProducto(id) {
   cesta.removeProducto(id);
 }
 
-function validarDescuento() {
-  cesta.codigoDescuento.codigo = codigoDescuento.value;
-}
-
 //Alerta reutilizable pasandole los datos por parametro
 function mostrarAlerta(title, text, icon) {
   Swal.fire({
