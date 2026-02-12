@@ -525,6 +525,42 @@
       "servicioTaller": "PreITV",
       "estadoCita": "Pendiente",
       "acepta": true
+    },
+    {
+      "id": "0adf",
+      "matricula": "4321CCC",
+      "movilCliente": "654321654",
+      "fechaCita": "2026-06-27",
+      "servicioTaller": "PreITV",
+      "estadoCita": "Pendiente",
+      "acepta": true
+    },
+    {
+      "id": "7b0e",
+      "matricula": "1111RSA",
+      "movilCliente": "666777888",
+      "fechaCita": "2026-03-29",
+      "servicioTaller": "Neumáticos",
+      "estadoCita": "Pendiente",
+      "acepta": true
+    },
+    {
+      "id": "fad4",
+      "matricula": "4444CCC",
+      "movilCliente": "666666666",
+      "fechaCita": "2026-02-27",
+      "servicioTaller": "PreITV",
+      "estadoCita": "Pendiente",
+      "acepta": true
+    },
+    {
+      "id": "4f4f",
+      "matricula": "1540FHJ",
+      "movilCliente": "666666666",
+      "fechaCita": "2026-02-28",
+      "servicioTaller": "Neumáticos",
+      "estadoCita": "Pendiente",
+      "acepta": true
     }
   ]
 }

@@ -236,7 +236,7 @@ async function cargarCitas() {
     });
     citas.value = await getCita();
     citas.value = citas.value.sort(
-      (a, b) => new Date(b.fecha) - new Date(a.fecha)
+      (a, b) => new Date(b.fecha) - new Date(a.fecha),
     );
   } catch (error) {
     console.error("Fallo al cargar los datos de la bbdd", error);
@@ -271,10 +271,10 @@ async function guardarCita() {
   // Validar duplicados solo si estás creando (no si editando)
   if (!editando.value) {
     const movilCliente = clientes.value.find(
-      (cliente) => cliente.movil === nuevaCita.value.movilCliente
+      (cliente) => cliente.movil === nuevaCita.value.movilCliente,
     );
     const movilDuplicado = citas.value.find(
-      (cita) => cita.movilCliente === nuevaCita.value.movilCliente
+      (cita) => cita.movilCliente === nuevaCita.value.movilCliente,
     );
     if (movilDuplicado || movilCliente) {
       const aceptarMovilDuplicado = await Swal.fire({
@@ -306,7 +306,7 @@ async function guardarCita() {
 
   if (editando.value) {
     const index = citas.value.findIndex(
-      (cita) => cita.id === citaEditandoId.value
+      (cita) => cita.id === citaEditandoId.value,
     );
     if (index !== -1) {
       citas.value[index] = { ...nuevaCita.value };
@@ -342,8 +342,9 @@ async function guardarCita() {
       await addCita(citaNueva);
       citas.value.unshift(citaNueva);
       citas.value = citas.value.sort(
-        (a, b) => new Date(b.fecha) - new Date(a.fecha)
+        (a, b) => new Date(b.fecha) - new Date(a.fecha),
       );
+      await cargarCitas();
 
       Swal.fire({
         icon: "success",
@@ -401,8 +402,10 @@ async function borrarCita(id) {
 
 async function editarCita(id) {
   editando.value = true;
-  nuevaCita.value = { ...citas.value.find((cita) => cita.id == id) };
-  citaEditandoId.value = id;
+  const cita = { ...citas.value.find((cita) => cita.id === id) };
+  if (!cita && !cita.id) return alert("Mal ahi");
+  nuevaCita.value = { ...cita };
+  citaEditandoId.value = cita.id;
 }
 
 function limpiarPagina() {
@@ -461,7 +464,7 @@ const citasPaginadas = computed(() => {
   const start = (currentPage.value - 1) * citasPorPage;
   const end = start + citasPorPage;
   citas.value = citas.value.sort(
-    (a, b) => new Date(b.fecha) - new Date(a.fecha)
+    (a, b) => new Date(b.fecha) - new Date(a.fecha),
   );
   return citas.value.slice(start, end);
 });
