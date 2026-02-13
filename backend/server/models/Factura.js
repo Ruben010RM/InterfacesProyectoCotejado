@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+//TODO hacer que almacene nombre y emal del usuario que compra
 const FacturaSchema = new mongoose.Schema({
   fecha: {
     type: Date,

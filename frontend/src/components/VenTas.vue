@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+//TODO filtrar por cantidad de kilometros
 import { ref, onMounted } from "vue";
 import { getArticulos } from "../api/articulos";
 import { useCestaStore } from "../store/cesta";

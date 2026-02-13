@@ -191,6 +191,7 @@ const previewFoto = ref(
 const cvNombre = ref("");
 const fileCV = ref(null);
 
+//Inputs de texto del formulario
 const form = reactive({
   nombre: "",
   telefono: "",
@@ -201,23 +202,28 @@ const form = reactive({
 });
 
 const manejarFoto = (event) => {
+  //El evento que lo dispara es el input, al notar un cambio obtenemos el archivo subiido y lo asociamos a una variable
   const file = event.target.files[0];
   if (file) {
+    //Si exste este archivo hacemos estoo para poder previsualizar la imagen segun se suba
     const reader = new FileReader();
     reader.onload = (e) => {
       previewFoto.value = e.target.result;
     };
+    //Con esto previsualizamos
     reader.readAsDataURL(file);
   }
 };
 
 const manejarCV = (event) => {
+  //Si existe el archivo lo seteamos al fileCv, y el nombre del archivo al cvnombre
   fileCV.value = event.target.files[0]; //
   if (fileCV.value) {
     cvNombre.value = fileCV.value.name;
   }
 };
 
+//Reseteamos tanto inputs de texto como los archivos
 const resetForm = () => {
   Object.assign(form, {
     nombre: "",
@@ -236,7 +242,7 @@ const resetForm = () => {
 };
 
 const enviarFormulario = async () => {
-  // Validación
+  // Validación, faltan las de formatoos
   if (
     !form.nombre.trim() ||
     !form.email.trim() ||
@@ -251,8 +257,10 @@ const enviarFormulario = async () => {
     return;
   }
 
+  //Seteamos cargando a true para renderizado condcional
   cargando.value = true;
 
+  //Formdata porque es un multiparts
   const formData = new FormData();
   formData.append("nombre", form.nombre.trim());
   formData.append("telefono", form.telefono.trim());
@@ -261,18 +269,23 @@ const enviarFormulario = async () => {
   formData.append("experiencia", form.experiencia);
   formData.append("mensaje", form.mensaje || "");
 
-  // Archivos desde los refs correctos
+  // Si la foto esta puesta, ya que es opcional, la metemos al form data si no no
+  //Como la fotoiinput es un ref en el input de arrba, lo que hacemos realmente es pasarle el elemento del dom como objeto al
+  //foto input, por ende accedemos de este elemento al files(podriamos acceder a mas cosas como value o name)
   if (fotoInput.value?.files[0]) {
     formData.append("foto", fotoInput.value.files[0]);
   }
+  //Tambien mandamos el cv, es obligatorio
   formData.append("cv", fileCV.value); //
 
   try {
+    //intentamos hacer un poost con el formdata creado, se dan las validaciones del backend(ver empleoController)
     const response = await axios.post(
       "http://localhost:5000/api/postulaciones/upload",
       formData,
     );
 
+    //Si no salta error sale swal
     Swal.fire({
       icon: "success",
       title: "¡Postulación enviada!",
@@ -280,6 +293,7 @@ const enviarFormulario = async () => {
       confirmButtonText: "Genial",
     });
 
+    //Reseteamos el form
     resetForm();
   } catch (error) {
     Swal.fire(

@@ -7,6 +7,7 @@ import fs from "fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+//Vemos si existe la carpeta uploads y si no se crea
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
@@ -14,6 +15,8 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 const router = express.Router();
+//seteamos en multer el destino a la carpeta de uploadsDir y el nombre del fichero que guarde sera el que pongamos en uniquename
+//hay que devolver ese nombre y el destinoo en los callbacks
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadsDir);
@@ -24,6 +27,8 @@ const storage = multer.diskStorage({
   },
 });
 
+//En la funcion de upload de multer decimos el storage(ruta destino y nombre + extenson del fichero), tamaños permitidos
+//y que tipo de archivos permitimos, si cumple la condicion se deja(acceptFile = true ) subir, si no no
 const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
@@ -40,6 +45,8 @@ const upload = multer({
   },
 });
 
+//En el post indicamos que primero se verifiquen los archivos y se setee el destin + nombre nuevo, indicamos que archivos tendremos y a que campos del body corresponden
+//Aqui multer ya se encarga de almacenar el archivo si pasa los filtros y las comprobaciones
 router.post(
   "/upload",
   upload.fields([
@@ -48,6 +55,7 @@ router.post(
   ]),
   async (req, res) => {
     try {
+      //Creamos objeto con los datos del body para guardar en el json, de las imagenes y archivos solo almacenamos rutas
       const postulacion = {
         id: Date.now(),
         nombre: req.body.nombre,
@@ -63,13 +71,14 @@ router.post(
         fecha: new Date().toISOString(),
       };
 
-      // Guardar en JSON Server
+      // Guardar en JSON Server la postulacion con las rutas
       await fetch("http://localhost:3000/postulaciones", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postulacion),
       });
 
+      //Devolvemos un successs
       res.json({
         success: true,
         message: "Postulación guardada",
