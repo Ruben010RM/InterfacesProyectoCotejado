@@ -467,7 +467,7 @@
       "id": "606d",
       "matricula": "1540FHJ",
       "movilCliente": "675184834",
-      "fechaCita": "2003-09-22",
+      "fechaCita": "2003-09-28",
       "servicioTaller": "Revision",
       "estadoCita": "Finalizado",
       "acepta": true
@@ -562,5 +562,6 @@
       "estadoCita": "Pendiente",
       "acepta": true
     }
-  ]
+  ],
+  "postulaciones": []
 }

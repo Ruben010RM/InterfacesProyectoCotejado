@@ -42,7 +42,7 @@ import autoTable from "jspdf-autotable";
 import { useCestaStore } from "../store/cesta";
 import logo from "../assets/logo.png";
 import { addFactura } from "../api/facturas";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { updateArticuloStatus } from "../api/articulos";
 // Creamos la cesta para usar metodos y datos
 const cestaStore = useCestaStore();
@@ -63,7 +63,7 @@ async function guardarFacturaMongo() {
         cantidad: producto.cantidad,
         precio_unitario: producto.precio,
       })),
-      total: cestaStore.totalPrecio,
+      total: cestaStore.precioFinal,
     };
     await addFactura(factura);
     facturaGuardada.value = true;
@@ -82,72 +82,80 @@ onMounted(async () => {
   }
 });
 
-//Metodo que genera un pdf en base a los datos que le pasamos.
 async function generarFacturaPdf() {
-  //Asociamos el array de items no visible a la variable cart
   const cart = cestaStore.compraCompleta;
 
-  //Si no tiene elementos mostramos alert
   if (cart.length === 0) {
     alert("No hay productos para facturar");
     return;
   }
 
-  //Creamos pdf y seteamos las propiedades
   const doc = new jsPDF();
 
-  // Logo y encabezado
-  doc.addImage(logo, "png", 10, 10, 20, 20);
-  doc.setFontSize(18);
-  doc.text("Factura de Compra", 60, 20);
-  doc.setFontSize(9);
-  doc.text("Razón Social: Regalos Teis", 110, 50);
-  doc.text("Dirección: Avenida Galicia 101, Vigo - 36216", 110, 55);
-  doc.text("Tlfo: 986 666 333 - Email: regalos@example.com", 110, 60);
+  // LOGO y TÍTULO (simple)
+  doc.addImage(logo, "PNG", 15, 10, 25, 25);
+  doc.setFontSize(22);
+  doc.setFont("helvetica", "bold");
+  doc.text("FACTURA", 105, 25, { align: "center" });
+  doc.setFontSize(12);
+  doc.text("Regalos Teis", 105, 35, { align: "center" });
 
-  // Tabla de productos, marcará los headers de cada tabla
-  const headers = [["ID", "Producto", "Cantidad", "Precio Unitario", "Total"]];
-  //Formatea los datos para ser visibles, es un array de objetos
+  // DATOS EMPRESA (alineados)
+  doc.setFontSize(10);
+  doc.text("Avenida Galicia 101, Vigo - 36216", 150, 50);
+  doc.text("Tlf: 986 666 333", 150, 56);
+  doc.text("regalos@example.com", 150, 62);
+
+  // TABLA PRODUCTOS (perfectamente formada)
+  const headers = [["ID", "Producto", "Cant.", "P. Unitario (€)", "Total (€)"]];
   const data = cart.map((item) => [
-    item.id,
+    item.id.toString(),
     item.nombre,
-    item.cantidad,
-    `${item.precio.toFixed(2)}€`,
-    `${(item.cantidad * item.precio).toFixed(2)}€`,
+    item.cantidad.toString(),
+    item.precio.toFixed(2),
+    (item.cantidad * item.precio).toFixed(2),
   ]);
 
-  //Creamos tabla en base a los headers y datos
   autoTable(doc, {
-    startY: 80,
+    startY: 75,
     head: headers,
     body: data,
-    columnStyles: {
-      0: { halign: "center" },
-      2: { halign: "center" },
-      3: { halign: "right" },
-      4: { halign: "right" },
+    styles: {
+      fontSize: 9,
+      cellPadding: 4,
     },
-    theme: "striped",
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+      fontStyle: "bold",
+    },
+    columnStyles: {
+      0: { halign: "center", cellWidth: 35 },
+      1: { cellWidth: 70 },
+      2: { halign: "center", cellWidth: 20 },
+      3: { halign: "right", cellWidth: 30 },
+      4: { halign: "right", cellWidth: 35, fontStyle: "bold" },
+    },
+    margin: { left: 15, right: 15 },
   });
 
-  // Coger los datos para poner en el documento, el total vendrá del compraCompleta ya que el otro estará vacío
-  //TODO indicar en las facturas de la BBDD y de PDF si hay descuento en el precioFinal
-  const totalPrice = cestaStore.totalPrecio;
-  const totalText = `Total: ${totalPrice.toFixed(2)}€`;
-  const pageWidth = doc.internal.pageSize.width;
-  const totalWidth = doc.getTextWidth(totalText);
-  const positionX = pageWidth - totalWidth - 14;
+  // TOTAL (destacado y centrado)
+  const totalPrice = cestaStore.precioFinal;
+  const finalY = doc.lastAutoTable.finalY + 15;
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text(totalText, positionX - 9, doc.lastAutoTable.finalY + 10);
+  doc.setFontSize(16);
+  doc.text(`TOTAL: ${totalPrice.toFixed(2)} €`, 175, finalY, {
+    align: "right",
+  });
 
-  //Guardamos el pdf
+  // Guardar
   doc.save(`factura_${Date.now()}.pdf`);
-
-  //Limpuamos ambas listas y el sessionStorage
-  cestaStore.clearCesta();
 }
+onUnmounted(() => {
+  // Limpiar
+  cestaStore.clearCesta();
+});
 </script>
 
 <style scoped>

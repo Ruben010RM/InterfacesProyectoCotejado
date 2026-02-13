@@ -74,7 +74,7 @@ export function verificarToken(req, res, next) {
     //Se ejecuta la siguiente funcion que toque
     next();
   } catch (err) {
-    console.log("❌ ERROR: Token inválido - 403", err.message);
+    console.log(" ERROR: Token inválido - 403", err.message);
     return res.status(403).json({ mensaje: "Token inválido" });
   }
 }

@@ -344,7 +344,23 @@
         </div>
       </div>
     </form>
-    <div class="mt-5">
+    <div class="d-flex mt-5 align-items-center">
+      <label class="fw-medium me-2">Filtrar por marca: </label>
+      <input
+        type="text"
+        v-model="inputFiltro"
+        class="form-control rounded shadow-none border w-25 d-flex"
+      />
+      <button
+        type="button"
+        @click.stop="imprimirPDFFiltrados"
+        class="btn-sm btn btn-outline-secondary rounded border shadow-none px-4 py-2 ms-2"
+      >
+        <i class="bi bi-printer"></i>
+        Imprimir por Marca
+      </button>
+    </div>
+    <div class="mt-2">
       <h6 class="text-center mb-1 bg-secondary text-white">
         Listado de Modelos
       </h6>
@@ -361,7 +377,7 @@
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody v-for="(vehiculo, index) in vehiculos">
+        <tbody v-for="(vehiculo, index) in vehiculosFiltrados">
           <tr class="text-center">
             <td>{{ vehiculo.matricula }}</td>
             <td>{{ vehiculo.marca }}</td>
@@ -454,7 +470,7 @@ const filtrarCiudades = () => {
   }
   const codigoProv = prov.id.slice(0, 2);
   municipiosFiltrados.value = municipios.value.filter((m) =>
-    m.id.startsWith(codigoProv)
+    m.id.startsWith(codigoProv),
   );
   vehiculo.value.ubicacion.ciudad = "";
 };
@@ -654,6 +670,90 @@ function imprimirPDF() {
   doc.save("listado_vehiculos.pdf");
 }
 
+function imprimirPDFFiltrados() {
+  const doc = new jsPDF();
+
+  if (typeof autoTable !== "function") {
+    console.error("jspdf-autotable no está cargado correctamente");
+    Swal.fire("Error", "Plugin autotable no disponible", "error");
+    return;
+  }
+
+  doc.setFontSize(20);
+  doc.setFont("helvetica", "bold");
+  doc.text("Vehículos Filtrados", 14, 22);
+
+  // Mostrar filtro aplicado
+  if (inputFiltro.value.trim()) {
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Marca: "${inputFiltro.value}"`, 14, 32);
+    doc.setTextColor(0, 0, 0);
+  }
+
+  const vehiculosParaImprimir = vehiculosFiltrados.value;
+
+  if (vehiculosParaImprimir.length === 0) {
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "italic");
+    doc.text("No se encontraron vehículos con el filtro", 14, 45);
+    doc.save("vehiculos_sin_resultados.pdf");
+    return;
+  }
+
+  const headers = [["Matrícula", "Marca", "Estado", "Combustible", "Precio"]];
+  const body = vehiculosParaImprimir.map((modelo) => [
+    modelo.matricula || "",
+    modelo.marca || "",
+    modelo.estado ? modelo.estado.toUpperCase() : "",
+    modelo.combustible || "",
+    modelo.precio ? `€${modelo.precio.toLocaleString()}` : "-",
+  ]);
+
+  autoTable(doc, {
+    startY: inputFiltro.value.trim() ? 42 : 32,
+    head: headers,
+    body: body,
+    theme: "grid",
+    styles: {
+      fontSize: 9,
+      cellPadding: 4,
+      overflow: "linebreak",
+      halign: "left",
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+      fontStyle: "bold",
+      fontSize: 10,
+    },
+    columnStyles: {
+      0: { cellWidth: 35 },
+      1: { cellWidth: 35 },
+      2: { cellWidth: 35 },
+      3: { cellWidth: 35 },
+      4: { halign: "right", cellWidth: 32, fontStyle: "bold" },
+    },
+    margin: { left: 14, right: 14 },
+    didDrawPage: (data) => {
+      const pageCount = doc.internal.getNumberOfPages();
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        `Página ${data.pageNumber} de ${pageCount} | Total: ${vehiculosParaImprimir.length} vehículos`,
+        14,
+        doc.internal.pageSize.height - 10,
+      );
+    },
+  });
+
+  const nombreArchivo = inputFiltro.value.trim()
+    ? `vehiculos_${inputFiltro.value.replace(/[^a-zA-Z0-9]/g, "_")}_${new Date().toISOString().slice(0, 10)}.pdf`
+    : `vehiculos_filtrados_${new Date().toISOString().slice(0, 10)}.pdf`;
+
+  doc.save(nombreArchivo);
+}
 async function editarVehiculo(matricula) {
   const vehiculoActual = vehiculos.value.find(matricula);
   if (!vehiculoActual) {
@@ -661,5 +761,15 @@ async function editarVehiculo(matricula) {
   }
   editando.value = true;
 }
+const inputFiltro = ref("");
+const vehiculosFiltrados = computed(() => {
+  if (!inputFiltro.value.trim()) {
+    return vehiculos.value;
+  } else {
+    return vehiculos.value.filter((vehiculo) =>
+      vehiculo.marca.toLowerCase().includes(inputFiltro.value.toLowerCase()),
+    );
+  }
+});
 </script>
 <style scoped></style>

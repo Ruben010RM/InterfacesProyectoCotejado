@@ -15,7 +15,9 @@ import ConTacto from "../components/ConTacto.vue";
 import CesTa from "../components/CesTa.vue";
 import TablaSuccess from "../components/TablaSuccess.vue";
 import TablaCancel from "../components/TablaCancel.vue";
-
+import CarDetails from "../components/CarDetails.vue";
+import ReservarVehiculo from "../components/ReservarVehiculo.vue";
+import EmpLeo from "../components/EmpLeo.vue";
 const routes = [
   {
     path: "/",
@@ -93,6 +95,21 @@ const routes = [
     path: "/cancel",
     name: "TablaCancel",
     component: TablaCancel,
+  },
+  {
+    path: "/cardetails/:id",
+    name: "CarDetails",
+    component: CarDetails,
+  },
+  {
+    path: "/reservar/:id",
+    name: "ReservarVehiculo",
+    component: ReservarVehiculo,
+  },
+  {
+    path: "/empleo",
+    name: "EmpLeo",
+    component: EmpLeo,
   },
 ];
 

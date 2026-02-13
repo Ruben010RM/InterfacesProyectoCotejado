@@ -20,16 +20,18 @@ import articulosRoutes from "./articulosRoutes.js"; // ruta al router backend
 import authController from "./authController.js";
 import contactoRouter from "./contactoRouter.js";
 import facturaRoutes from "./facturaRoutes.js";
+import empleoController from "./empleoController.js";
 import Stripe from "stripe";
-import { log } from "console";
+
 const app = express();
 const PORT = process.env.PORT || 5000; // Use PORT from environment or default to 5000
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 // Middleware
 // app.use(cors()); si no funciona lo siguiente
 app.use(cors());
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.use("/api/postulaciones", empleoController);
 
 app.use(express.json());
 
